@@ -1,5 +1,5 @@
-use std::io; //puts this std input/ouput library for Rust into this file
 use rand::Rng;
+use std::{cmp::Ordering, io}; //puts this std input/ouput library for Rust into this file
 
 fn main() {
     // In Rust, fn main() is the entry point of a Rust program. It is the starting point of execution when the program is run. The main function is where the program's execution begins and it is mandatory in every Rust executable.
@@ -9,15 +9,29 @@ fn main() {
 
     println!("The secret number is: {secret_number}"); // prints the secret number for development
 
-    println!("Please input your guess."); // Print the string "Please input your guess." to the console
+    loop {
+        println!("Please input your guess."); // Print the string "Please input your guess." to the console
 
-    let mut guess = String::new(); // Declare a mutable variable `guess` of type `String` and initialize it with a new empty string using ::new, this also creates storage for the user input
+        let mut guess = String::new(); // Declare a mutable variable `guess` of type `String` and initialize it with a new empty string using ::new, this also creates storage for the user input
 
-    io::stdin() // Access the standard input stream
-        .read_line(&mut guess) // Read a line from the standard input and store it in the `guess` variable, modifying its value
-        .expect("Failed to read line"); // If reading the line fails, print the error message "Failed to read line"
+        io::stdin() // Access the standard input stream
+            .read_line(&mut guess) // Read a line from the standard input and store it in the `guess` variable, modifying its value
+            .expect("Failed to read line"); // If reading the line fails, print the error message "Failed to read line"
 
-    println!("You guessed: {guess}"); // Print the string "You guessed: " followed by the value of `guess` to the console
+        let guess: u32 = guess.trim().parse().expect("Please type a number"); // Parse the input string `guess` into an unsigned 32-bit integer (`u32`)
+
+        println!("You guessed: {guess}"); // Print the string "You guessed: " followed by the value of `guess` to the console
+
+        match guess.cmp(&secret_number) {
+            // Compare `guess` with `secret_number` using the `cmp` method
+            Ordering::Less => println!("Too small!"), // If `guess` is less than `secret_number`, print "Too small!"
+            Ordering::Greater => println!("Too big!"), // If `guess` is greater than `secret_number`, print "Too big!"
+            Ordering::Equal => {
+                println!("You win!"); // If `guess` is equal to `secret_number`, print "You win!"
+                break; // ends the operation and in this case the program
+            }
+        }
+    }
 }
 
 // Remembedr to run the command cargo doc --open to get easy documentation of the libraries and functions you are using.

@@ -18,7 +18,11 @@ fn main() {
             .read_line(&mut guess) // Read a line from the standard input and store it in the `guess` variable, modifying its value
             .expect("Failed to read line"); // If reading the line fails, print the error message "Failed to read line"
 
-        let guess: u32 = guess.trim().parse().expect("Please type a number"); // Parse the input string `guess` into an unsigned 32-bit integer (`u32`)
+        let guess: u32 = match guess.trim().parse() {
+            // Parse the input string `guess` into an unsigned 32-bit integer (`u32`)
+            Ok(num) => num,
+            Err(_) => continue,
+        };
 
         println!("You guessed: {guess}"); // Print the string "You guessed: " followed by the value of `guess` to the console
 
